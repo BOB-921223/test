@@ -16,7 +16,7 @@
 
 \begingroup % 開始一個新的群組，避免影響後續內容, 取消換頁
 \let\clearpage\relax   % 重新定義 \clearpage 為不換頁
-\listoftables % 產生表目錄
+ %\listoftables % 產生表目錄
 \lstlistoflistings % 產生程式碼目錄
 \endgroup % 結束群組
 
@@ -49,7 +49,7 @@ Messaging API 的應用非常廣泛，以下列出幾個具代表性的實際場
 \end{enumerate}
 展望未來，LINE Messaging API 將持續朝「智慧化」、「個人化」與「跨平台整合」方向發展。AI 對話與使用者行為分析將成為關鍵技術，使 Bot 不僅能回覆問題，更能主動理解與預測使用者需求。
 
-
+%--分隔線--
 \chapter{LINE Developers 帳號註冊申請與 Channel 建立流程}
 
 \section{LINE Developers 帳號建立}
@@ -60,42 +60,221 @@ Messaging API 的應用非常廣泛，以下列出幾個具代表性的實際場
 
 在帳號註冊完成後，開發者即可在主控台中看到專案清單與狀態，並能管理權限、API 使用紀錄等資訊。
 
-% 圖片 -----------------
-\begin{figure}[ht]
+%--分隔線--
+
+\section{建立 Messaging API Channel 流程}
+
+\begin{enumerate}
+    \item 點擊「Create a new channel」
+    \item 選擇類型：Messaging API
+    \item 填寫 Channel 名稱、描述與類別
+    \item 勾選同意使用條款
+    \item 提交後即可在控制台看到新建的 Channel
+    \end{enumerate}
+
+    建立完成後，平台會自動生成：
+     \begin{itemize}
+        \item Channel ID
+        \item Channel Secret
+        \item Channel Access Token（可重新產生）
+    \end{itemize}
+    
+    \begin{figure}[H] 
     \centering
-    \includegraphics[scale=0.2]{photo1.png}
-    \caption{圖片範例展示}
+    \includegraphics[scale=1]{line1.png}
+    \caption{Create a new channel圖示}
 \end{figure}
 
+\vspace{1\baselineskip}
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[scale=0.5]{line2.png}
+    \caption{創建帳號}
+\end{figure}
+
+\vspace{1\baselineskip}
+
+\begin{figure}[H]  
+    \centering
+    \includegraphics[scale=0.5]{line3.png}
+    \caption{填寫 Channel 名稱、描述與類別}
+\end{figure}
+
+    這些資訊是後續整合 API 的關鍵。
+此外，Channel 頁面也提供多項設定，如 Webhook URL、功能權限、回覆模式（自動或手動）等。
+
+在實務開發中，建議將 Channel 區分為「開發測試用」與「正式營運用」兩組，以便版本控制與權限管理。
+
+%--分隔線--
 
 \chapter{Channel Secret 及 Access Token 取得與設定}
 
-cccccc
+\section{建立 Messaging API Channel 流程}
 
+Channel Secret 是由 LINE 平台自動產生的一串字串，用來驗證 Webhook 的來源真偽。
+每當 LINE 伺服器發送事件通知至你的伺服器時，HTTP Header 內會附帶一個簽章（Signature）。
+伺服器端應以 Channel Secret 進行 HMAC-SHA256 驗證，以確認請求未被偽造。
+
+若 Secret 外洩，惡意者可能偽造事件請求並誘使伺服器誤判，因此務必妥善保管。常見作法是使用環境變數儲存，或以 .env 文件方式讀取。
+
+%--分隔線--
+
+\section{Access Token 的產生與管理}
+
+Channel Access Token 是讓伺服器代表 LINE Bot 呼叫 API 的授權金鑰。
+在 Messaging API 頁面中，開發者可選擇「Issue」產生新的 Token。建議選用長期有效（Long-lived）的 Token，以避免頻繁更新。
+
+\vspace{1\baselineskip}
+
+範例設定方式如下（Python Flask 環境）：
+
+\begin{lstlisting}[caption={Python Flask 環境 範例}, label={lst:app.py}]
+export LINE_CHANNEL_SECRET="abcdef1234567890"
+export LINE_CHANNEL_ACCESS_TOKEN="E9qU3Y3xyz..."
+\end{lstlisting}
+
+此 Token 在應用程式中用於初始化 LineBotApi 物件。
+若需要強化安全性，可定期重新產生 Token 並更新伺服器設定。
+
+\vspace{1\baselineskip}
+
+此外，也建議啟用伺服器防火牆與 HTTPS 憑證，以確保通訊安全。
+
+%--分隔線--
 
 \chapter{Webhook 的設定與測試方式（可使用 ngrok 或伺服器）}
 
-dddddd
+\section{Webhook 機制說明}
+Webhook 是 Messaging API 的核心之一。當使用者在 LINE 對話中輸入文字或觸發事件時，LINE 伺服器會立即將該事件以 JSON 格式發送至你設定的 Webhook URL。
+
+\vspace{1\baselineskip}
+
+Webhook 的優點在於：
+     \begin{itemize}
+        \item 即時性高：可立即回應使用者操作。
+        \item 節省輪詢資源：伺服器不需主動查詢，僅在事件發生時處理。
+        \item 易於整合：可與資料庫、AI 模組或外部 API 結合。
+    \end{itemize}
+
+Webhook 的資料結構包括事件類型（如 message、follow、unfollow、join 等）以及使用者 ID、訊息內容、時間戳記等欄位。
+
+%--分隔線--
+
+\section{Webhook 機制說明}
+若開發環境在本地端，無法被外部連線，此時可利用 ngrok 工具。
+
+\vspace{1\baselineskip}
+
+安裝後，執行以下命令：
+\begin{lstlisting}[caption={ngrok指令1}, label={lst:app.py}]
+ngrok http 5000
+\end{lstlisting}
+
+ngrok 會建立一條安全通道，並產生一個 HTTPS 公開網址，例如：
+\begin{lstlisting}[caption={ngrok指令2}, label={lst:app.py}]
+https://abcd1234.ngrok.io
+\end{lstlisting}
+
+將此網址填入 LINE Developers 控制台的「Webhook URL」欄位，然後點擊「Verify」按鈕。若顯示成功，即表示本地伺服器能正常接收事件。
+
+\vspace{1\baselineskip}
+
+在測試過程中，可於 Flask 伺服器輸出 print() 訊息以觀察事件內容，協助除錯。
+
+%--分隔線--
 
 \chapter{範例程式說明（接收及回覆 LINE 訊息）}
-\begin{lstlisting}[caption={Python app.py 範例}, label={lst:app.py}]
-from flask import Flask, request, abort
-import os
-from linebot.v3 import WebhookHandler
-from linebot.v3.messaging import Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage
-from linebot.v3.exceptions import InvalidSignatureError
-from linebot.v3.webhooks import MessageEvent, TextMessageContent
-from dotenv import load_dotenv
 
-# 載入環境變數
-load_dotenv()
+\section{程式架構介紹}
+
+本範例使用 Python Flask 框架，搭配官方提供的"line-bot-sdk"套件。整體流程如下：
+       \begin{enumerate}
+        \item 使用者在 LINE 中傳送訊息給 Bot。
+        \item LINE 伺服器透過 Webhook 將事件傳送至 Flask /callback 路由。
+        \item Flask 接收到事件後交由 WebhookHandler 驗證簽章。
+        \item 若為文字訊息事件，則以相同文字回覆。
+    \end{enumerate}
+
+此結構簡單明瞭，適合初學者快速上手。
+
+%--分隔線--
+
+\section{程式碼與執行步驟}
+
+安裝必要套件：
+
+\begin{lstlisting}[caption={安裝必要條件}, label={lst:app.py}]
+pip install flask line-bot-sdk
+\end{lstlisting}
+
+範例主程式如下：
+
+\begin{lstlisting}[caption={範例主程式}, label={lst:app.py}]
+from flask import Flask, request, abort
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
 
-# 讀取 LINE Credentials 從環境變數
-CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
-CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+line_bot_api = LineBotApi('YOUR_CHANNEL_ACCESS_TOKEN')
+handler = WebhookHandler('YOUR_CHANNEL_SECRET')
+
+@app.route("/callback", methods=['POST'])
+def callback():
+    signature = request.headers['X-Line-Signature']
+    body = request.get_data(as_text=True)
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+    return 'OK'
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    msg = event.message.text
+    reply = f"你說了: {msg}"
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=reply)
+    )
+
+if __name__ == "__main__":
+    app.run(port=5000)
+
 \end{lstlisting}
+
+執行後搭配 ngrok 測試，即可於手機上體驗 Bot 的回覆行為。
+
+\vspace{1\baselineskip}
+
+若要擴充，可加入圖片訊息（ImageMessage）、按鈕模板或 Flex Message。
+
+%--分隔線--
+
+\chapter{結論與未來發展}
+
+\section{開發成果總結}
+
+本文件完整說明了 LINE Messaging API 的基礎原理、開發流程、安全設定與測試方式，並提供實際程式範例。
+透過此流程，開發者能從無到有建立一個能與使用者互動的 LINE Bot，並掌握從 Channel 設定到 Webhook 驗證的關鍵步驟。
+
+\vspace{1\baselineskip}
+
+本範例雖屬基礎型聊天機器人，但其架構具延展性，可應用於各類智慧服務，例如即時客服、智慧助理、行銷推播與 IoT 裝置整合等。
+
+\section{未來應用方向與挑戰}
+未來的 LINE Bot 開發趨勢將聚焦於以下方向：
+     \begin{enumerate}
+        \item 人工智慧整合：結合 ChatGPT、Dialogflow 等 NLP 模型，提供更自然的對話體驗。
+        \item 多媒體互動：支援圖片、影片、地圖、音訊回覆，豐富使用者體驗。
+        \item 資料分析與行銷決策：藉由使用者互動紀錄進行行為分析，優化產品策略。
+        \item 跨平台串接：將 LINE 與網站、App、CRM 系統互通，形成完整的服務生態。
+    \end{enumerate}
+    
+不過，開發者也必須面對如使用者隱私保護、API 權限管理與伺服器安全等挑戰。
+唯有兼顧便利與安全，才能打造穩定、可信賴的智慧對話應用。
 
 \end{document}
 
