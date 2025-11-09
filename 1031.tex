@@ -1,0 +1,101 @@
+\documentclass[a4paper, 12pt]{report}
+\input{preamble.tex}
+
+\title{專業排版與設計~期中考題 \\[2cm] LINE Messaging API 教學文件製作}
+\author{座號: \makebox[4cm]{\begin{tabular}{c}\small 017\\[-3.0ex]\rule{4cm}{0.4pt}\end{tabular}} \\[1cm] 
+班級: \makebox[4cm]{\begin{tabular}{c}\small 資管4A\\[-3.0ex]\rule{4cm}{0.4pt}\end{tabular}} \\[1cm] 
+學號: \makebox[4cm]{\begin{tabular}{c}\small 411631277\\[-3.0ex]\rule{4cm}{0.4pt}\end{tabular}} \\[1cm] 
+姓名: \makebox[4cm]{\begin{tabular}{c}\small 張誠恩\\[-3.0ex]\rule{4cm}{0.4pt}\end{tabular}} \\[1cm]}
+\date{\today}
+
+\begin{document} % 開始文件
+
+\maketitle % 產生標題頁
+\tableofcontents % 產生章節目錄
+\listoffigures % 產生圖目錄
+
+\begingroup % 開始一個新的群組，避免影響後續內容, 取消換頁
+\let\clearpage\relax   % 重新定義 \clearpage 為不換頁
+\listoftables % 產生表目錄
+\lstlistoflistings % 產生程式碼目錄
+\endgroup % 結束群組
+
+
+\chapter{LINE Messaging API 簡介與應用場景}
+
+\section{LINE Messaging API 概述}
+
+LINE Messaging API 是由 LINE 公司提供的雲端服務介面，旨在讓開發者能以程式方式操作 LINE 聊天平台的互動功能。透過此 API，開發者可以建立能夠主動推播訊息、回覆使用者輸入、甚至與後端資料庫互動的自動化聊天系統。
+
+Messaging API 採用 RESTful 架構，所有互動皆以 HTTPS 為基礎的 POST/GET 請求完成。開發者透過 LINE Developers 平台建立一個「Channel」，並使用「Channel Access Token」來進行身分驗證與授權。LINE 平台再透過 Webhook 機制，將使用者事件（例如訊息、加入好友、按鈕互動等）傳送至開發者設定的伺服器。
+
+此技術的誕生使得企業不再需要自行開發聊天系統，而能以 LINE 為前端通道，將客戶溝通、行銷與服務集中於單一平台。這大幅降低開發成本，同時擴大應用覆蓋範圍。
+
+%--分隔線--
+
+\section{常見應用場景與發展趨勢}
+
+Messaging API 的應用非常廣泛，以下列出幾個具代表性的實際場景：
+
+\begin{enumerate}
+    \item 智慧客服機器人:
+    許多企業利用 LINE Bot 回覆常見問題，整合 FAQ、訂單查詢、報修狀態查詢等功能，減少人力成本。
+    \item 行銷與推播通知:
+    透過 Broadcast Message 或 Multicast API，企業可向特定用戶群發送促銷訊息，並根據互動紀錄分析點擊率。
+    \item 服務整合平台:
+    結合 Google Sheets、Firebase 或 MySQL，可實現會員查詢、預約系統、積分兌換等功能。
+    \item 教育與社群應用
+    學校可利用 LINE Bot 提供課程公告、作業提醒，社群團體亦能透過 Bot 管理活動報名。
+\end{enumerate}
+展望未來，LINE Messaging API 將持續朝「智慧化」、「個人化」與「跨平台整合」方向發展。AI 對話與使用者行為分析將成為關鍵技術，使 Bot 不僅能回覆問題，更能主動理解與預測使用者需求。
+
+
+\chapter{LINE Developers 帳號註冊申請與 Channel 建立流程}
+
+\section{LINE Developers 帳號建立}
+要使用 Messaging API，第一步是註冊 LINE Developers 帳號。開發者可前往 https://developers.line.biz/
+網站，以現有的 LINE 帳號登入。進入後可建立一個或多個「Provider」──代表開發者或公司身分。
+
+建立 Provider 後，平台會要求設定名稱、聯絡信箱與用途描述。Provider 相當於開發者群組，而每個 Provider 底下可以擁有多個 Channel，用以區分不同應用程式或專案。
+
+在帳號註冊完成後，開發者即可在主控台中看到專案清單與狀態，並能管理權限、API 使用紀錄等資訊。
+
+% 圖片 -----------------
+\begin{figure}[ht]
+    \centering
+    \includegraphics[scale=0.2]{photo1.png}
+    \caption{圖片範例展示}
+\end{figure}
+
+
+\chapter{Channel Secret 及 Access Token 取得與設定}
+
+cccccc
+
+
+\chapter{Webhook 的設定與測試方式（可使用 ngrok 或伺服器）}
+
+dddddd
+
+\chapter{範例程式說明（接收及回覆 LINE 訊息）}
+\begin{lstlisting}[caption={Python app.py 範例}, label={lst:app.py}]
+from flask import Flask, request, abort
+import os
+from linebot.v3 import WebhookHandler
+from linebot.v3.messaging import Configuration, ApiClient, MessagingApi, ReplyMessageRequest, TextMessage
+from linebot.v3.exceptions import InvalidSignatureError
+from linebot.v3.webhooks import MessageEvent, TextMessageContent
+from dotenv import load_dotenv
+
+# 載入環境變數
+load_dotenv()
+
+app = Flask(__name__)
+
+# 讀取 LINE Credentials 從環境變數
+CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
+CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+\end{lstlisting}
+
+\end{document}
+

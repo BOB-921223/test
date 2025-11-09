@@ -1,0 +1,8 @@
+\contentsline {chapter}{\numberline {1}LINE Messaging API 簡介與應用場景}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}LINE Messaging API 概述}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}常見應用場景與發展趨勢}{3}{section.1.2}%
+\contentsline {chapter}{\numberline {2}LINE Developers 帳號註冊申請與 Channel 建立流程}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}LINE Developers 帳號建立}{4}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Channel Secret 及 Access Token 取得與設定}{5}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Webhook 的設定與測試方式（可使用 ngrok 或伺服器）}{6}{chapter.4}%
+\contentsline {chapter}{\numberline {5}範例程式說明（接收及回覆 LINE 訊息）}{7}{chapter.5}%

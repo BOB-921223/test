@@ -1,0 +1,79 @@
+% --- preamble.tex ---
+% 文件的導言區設定集合
+
+% 版面設定
+\usepackage[a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+% \usepackage[a4paper, margin=2.5cm]{geometry}
+% \geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+% 常用套件1
+\usepackage{graphicx}
+\graphicspath{{images/}{figures/}} % 設定圖片路徑
+\usepackage[hidelinks]{hyperref} % 去除超連結顏色與框線
+\usepackage{xcolor}
+\usepackage{color} % 顏色套件
+\usepackage{cascadia-code} % Cascadia Code 字型套件
+\usepackage{float} % 用於強制圖片位置的套件
+
+% 設定字型
+% 文件語言與字型
+\usepackage{fontspec}     %allow setting fonts
+\usepackage{xeCJK}        % 中文套件
+\usepackage{lstfiracode} % https://ctan.org/pkg/lstfiracode
+\setmonofont{Cascadia Code}[Contextuals=Alternate,Ligatures=TeX,Scale=0.85] % 開啟連字效果,字型縮放至 90%
+\setmainfont{Times New Roman}[Contextuals=NoAlternate,Ligatures=TeX,Scale=1] % 關閉連字效果,字型縮放至 90%
+\setCJKmonofont{標楷體}[AutoFakeBold=3,ItalicFont={標楷體},AutoFakeSlant=.2]  % 設定中文字型，模擬粗體字與斜體字效果，數值越大，模擬的粗度越高，但效果可能越差 % 設定中文等寬字型
+\setCJKmainfont{標楷體}[AutoFakeBold=3,ItalicFont={標楷體},AutoFakeSlant=.2]  % 設定中文字型，模擬粗體字與斜體字效果，數值越大，模擬的粗度越高，但效果可能越差
+\XeTeXlinebreaklocale "zh" % 
+\XeTeXlinebreakskip = 0pt plus 1pt
+\hfuzz=10pt % 避免 overfull hbox 警告
+
+% 程式碼排版設定
+\usepackage{listings}
+% 定義自訂的程式碼風格，取名為CodeStyle1
+\lstdefinestyle{CodeStyle1}{
+    upquote=true, % 顯示正確的單引號
+    language=Python,  % C++, Java, Python, etc.
+    style=FiraCodeStyle,
+    basicstyle=\linespread{0.9}\ttfamily, % 設定為 90% 的行高, 等寬字型
+    backgroundcolor=\color[gray]{0.96},
+    showstringspaces=false,
+    breaklines=true,    % 自動換行
+    numberstyle=\footnotesize\color[gray]{0.5},
+    numbers=left,
+    morekeywords={const,arrow}, % 可添加更多關鍵字
+    keywordstyle=\bfseries\color{blue},
+    frame=single
+}
+% 全域程式碼排版設定
+\lstset{
+    language=Python,
+    style=CodeStyle1,
+}
+
+% \renewcommand{\abstractname}{摘要}
+% \renewcommand{\refname}{參考文獻}
+\renewcommand{\contentsname}{\centering 目錄} % 修改目錄標題
+\renewcommand{\listfigurename}{\centering 圖目錄} % 修改圖目錄標題
+\renewcommand{\listtablename}{\centering 表目錄} % 修改表目錄標題
+\renewcommand{\lstlistlistingname}{\centering 程式碼目錄} % 修改程式碼目錄標題
+\renewcommand{\figurename}{圖} % 修改圖片標籤
+\renewcommand{\tablename}{表} % 修改表格標籤
+\renewcommand{\lstlistingname}{程式碼}  % 修改程式碼標籤
+
+% 常用套件2
+\usepackage{setspace} % 行距調整套件，可輕鬆設定單倍、1.5倍或雙倍行距，並能區域性或全域地應用
+\setstretch{2.0} % 全域設定行距為 1.5 倍
+% \singlespacing     % 單倍行距（預設狀態）
+% \onehalfspacing    % 一點五倍行距
+% \doublespacing     % 雙倍行距
+
+% 章節樣式
+\usepackage{titlesec} % 用於自定義章節標題格式
+% \titleformat{\chapter}[hang]{\LARGE\bfseries}{第\ \thechapter\ 章}{1em}{} % 自定義章節標題格式
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{第\,\thechapter\,章}{1em}{} % \, 產生一個小空格(1/3em)
+
+% 設定首段也縮排與行距
+\usepackage{indentfirst}     % 讓首段也縮排（預設首段不縮）
+\setlength{\parindent}{2em}  % 調整縮排距離，2em 約兩個中文字寬
+\onehalfspacing
